@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET || 'supersecret';
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_SECRET || 'superrefresh';
+const ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET || 'supersecret';
+const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET || process.env.REFRESH_SECRET || 'superrefresh';
 const ACCESS_TOKEN_EXPIRES_IN = '1h';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';
 

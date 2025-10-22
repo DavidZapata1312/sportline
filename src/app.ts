@@ -35,7 +35,8 @@ app.get("/", (req, res) => {
             auth: "/api/auth (POST /register, /login, /refresh)",
             products: "/api/products (GET, POST, PUT /:id, DELETE /:id)",
             clients: "/api/clients (GET, POST, PUT /:id, DELETE /:id)",
-            deliveries: "/api/deliveries (POST /, GET /client/:clientId/history)"
+            deliveries: "/api/deliveries (POST /, GET /client/:clientId/history)",
+            docs: "/api/docs (Swagger UI)"
         }
     });
 });
