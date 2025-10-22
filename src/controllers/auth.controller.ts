@@ -15,10 +15,23 @@ export class AuthController {
 
     async login(req: Request, res: Response) {
         try {
-            const { user, token } = await authService.login(req.body);
-            res.json({ user, token });
+            const { user, accessToken, refreshToken } = await authService.login(req.body);
+            res.json({ user, accessToken, refreshToken });
         } catch (err: any) {
             res.status(400).json({ message: err.message });
+        }
+    }
+
+    async refresh(req: Request, res: Response) {
+        try {
+            const { refreshToken } = req.body;
+            if (!refreshToken) {
+                return res.status(400).json({ message: 'Refresh token is required' });
+            }
+            const tokens = await authService.refreshTokens(refreshToken);
+            res.json(tokens);
+        } catch (err: any) {
+            res.status(403).json({ message: err.message });
         }
     }
 }

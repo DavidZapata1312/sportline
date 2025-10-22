@@ -45,7 +45,7 @@ router.post('/login', async (req: Request, res: Response) => {
             });
         }
 
-        const { user, token } = await authService.login(loginData);
+        const { user, accessToken, refreshToken } = await authService.login(loginData);
         
         // Don't send password in response
         const { password, ...userWithoutPassword } = user.toJSON();
@@ -53,11 +53,38 @@ router.post('/login', async (req: Request, res: Response) => {
         res.json({
             message: 'Login successful',
             user: userWithoutPassword,
-            token
+            accessToken,
+            refreshToken
         });
     } catch (error: any) {
         res.status(401).json({ 
             error: error.message || 'Login failed' 
+        });
+    }
+});
+
+// Refresh token endpoint
+router.post('/refresh', async (req: Request, res: Response) => {
+    try {
+        const { refreshToken } = req.body;
+        
+        // Basic validation
+        if (!refreshToken) {
+            return res.status(400).json({ 
+                error: 'Refresh token is required' 
+            });
+        }
+
+        const tokens = await authService.refreshTokens(refreshToken);
+        
+        res.json({
+            message: 'Tokens refreshed successfully',
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
+        });
+    } catch (error: any) {
+        res.status(403).json({ 
+            error: error.message || 'Invalid refresh token' 
         });
     }
 });

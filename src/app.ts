@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
         message: "✅ Sportline API is running successfully",
         version: "1.0.0",
         endpoints: {
-            auth: "/api/auth (POST /register, /login)",
+            auth: "/api/auth (POST /register, /login, /refresh)",
             products: "/api/products (GET, POST, PUT /:id, DELETE /:id)",
             clients: "/api/clients (GET, POST, PUT /:id, DELETE /:id)"
         }
@@ -37,7 +37,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/clients", clientRoutes);
 
 // 404 handler
-app.use("*", (req, res) => {
+app.use((req, res) => {
     res.status(404).json({ 
         error: "Endpoint not found",
         message: "Please check the API documentation for available endpoints"

@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 
 const sequelize = new Sequelize(
-    "fhl_database", // bd name
+    "sportslinedb", // bd name
     "postgres",     // user
     "perla",        // password
     {
