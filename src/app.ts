@@ -3,10 +3,18 @@ import cors from "cors";
 import dotenv from "dotenv";
 import sequelize from "./config/db.js";
 
+// Initialize model associations
+import "./models/associations.js";
+
+// Swagger docs
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./docs/swagger.js";
+
 // Import routes
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import clientRoutes from "./routes/client.routes.js";
+import deliveryRoutes from "./routes/delivery.routes.js";
 
 // Load environment variables
 dotenv.config();
@@ -26,7 +34,8 @@ app.get("/", (req, res) => {
         endpoints: {
             auth: "/api/auth (POST /register, /login, /refresh)",
             products: "/api/products (GET, POST, PUT /:id, DELETE /:id)",
-            clients: "/api/clients (GET, POST, PUT /:id, DELETE /:id)"
+            clients: "/api/clients (GET, POST, PUT /:id, DELETE /:id)",
+            deliveries: "/api/deliveries (POST /, GET /client/:clientId/history)"
         }
     });
 });
@@ -35,6 +44,11 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/clients", clientRoutes);
+app.use("/api/deliveries", deliveryRoutes);
+
+// Swagger UI
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get("/api/docs.json", (req, res) => res.json(swaggerSpec));
 
 // 404 handler
 app.use((req, res) => {
