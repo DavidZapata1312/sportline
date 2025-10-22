@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import Client from '../models/client.model.js';
+import { validations } from '../middleware/validation.middleware.js';
+import { CreateClientDTO, UpdateClientDTO, ClientResponseDTO } from '../dtos/client.dto.js';
 
 const router = Router();
 
@@ -19,7 +21,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // Get client by ID
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', validations.validateId, async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const client = await Client.findByPk(id);
@@ -42,23 +44,20 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 // Create new client
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', validations.validateCreateClient, async (req: Request, res: Response) => {
     try {
-        const { name, email, phone, address } = req.body;
+        const clientData: CreateClientDTO = req.body;
         
-        // Basic validation
-        if (!name || !email) {
-            return res.status(400).json({ 
-                error: 'Name and email are required' 
+        // Check if email already exists
+        const existingClient = await Client.findOne({ where: { email: clientData.email } });
+        if (existingClient) {
+            return res.status(409).json({ 
+                error: 'Email already exists',
+                message: `Client with email '${clientData.email}' already exists` 
             });
         }
 
-        const client = await Client.create({
-            name,
-            email,
-            phone,
-            address
-        });
+        const client = await Client.create(clientData);
         
         res.status(201).json({
             message: 'Client created successfully',
@@ -72,10 +71,10 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // Update client
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', validations.validateId, validations.validateUpdateClient, async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { name, email, phone, address } = req.body;
+        const updateData: UpdateClientDTO = req.body;
         
         const client = await Client.findByPk(id);
         if (!client) {
@@ -84,11 +83,22 @@ router.put('/:id', async (req: Request, res: Response) => {
             });
         }
 
+        // Check if email is being updated and already exists
+        if (updateData.email && updateData.email !== client.email) {
+            const existingClient = await Client.findOne({ where: { email: updateData.email } });
+            if (existingClient) {
+                return res.status(409).json({ 
+                    error: 'Email already exists',
+                    message: `Client with email '${updateData.email}' already exists` 
+                });
+            }
+        }
+
         await client.update({
-            name: name || client.name,
-            email: email || client.email,
-            phone: phone !== undefined ? phone : client.phone,
-            address: address !== undefined ? address : client.address
+            name: updateData.name || client.name,
+            email: updateData.email || client.email,
+            phone: updateData.phone !== undefined ? updateData.phone : client.phone,
+            address: updateData.address !== undefined ? updateData.address : client.address
         });
         
         res.json({
@@ -103,7 +113,7 @@ router.put('/:id', async (req: Request, res: Response) => {
 });
 
 // Delete client
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', validations.validateId, async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         
