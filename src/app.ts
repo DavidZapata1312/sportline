@@ -7,6 +7,7 @@ import sequelize from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import clientRoutes from "./routes/client.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 
 // Load environment variables
 dotenv.config();
@@ -26,7 +27,8 @@ app.get("/", (req, res) => {
         endpoints: {
             auth: "/api/auth (POST /register, /login, /refresh)",
             products: "/api/products (GET, POST, PUT /:id, DELETE /:id)",
-            clients: "/api/clients (GET, POST, PUT /:id, DELETE /:id)"
+            clients: "/api/clients (GET, POST, PUT /:id, DELETE /:id)",
+            orders: "/api/orders (GET, POST, GET /:id)"
         }
     });
 });
@@ -35,6 +37,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/clients", clientRoutes);
+app.use("/api/orders", orderRoutes);
 
 // 404 handler
 app.use((req, res) => {
