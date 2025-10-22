@@ -7,7 +7,13 @@
   "scripts": {
     "dev": "nodemon --watch src --exec tsx src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "seed": "tsx src/seeders/seeder.ts",
+    "seed:prod": "node dist/seeders/seeder.js",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:prod": "docker-compose up --build",
+    "docker:seed": "docker-compose -f docker-compose.dev.yml run --rm app npm run seed:prod",
+    "docker:down": "docker-compose down && docker-compose -f docker-compose.dev.yml down"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

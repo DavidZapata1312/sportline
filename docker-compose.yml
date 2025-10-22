@@ -1,21 +1,26 @@
 services:
   app:
     build: .
-    container_name: node_app
+    container_name: sportline_app
     ports:
-      - "3000:3000"
+      - "4000:4000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - app-network
     environment:
+      NODE_ENV: production
+      PORT: 4000
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: example
-      DB_NAME: mydb
-    volumes:
-      - .:/app
+      DB_NAME: sportlinedb
+      JWT_ACCESS_SECRET: your-super-secret-access-key-change-in-production
+      JWT_REFRESH_SECRET: your-super-secret-refresh-key-change-in-production
+      RUN_SEEDER: "true"
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -24,12 +29,17 @@ services:
 
   db:
     image: postgres:16
-    container_name: postgres_db
+    container_name: sportline_db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
-      POSTGRES_DB: mydb
+      POSTGRES_DB: sportlinedb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sportlinedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - "5432:5432"
     networks:

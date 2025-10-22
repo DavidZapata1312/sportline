@@ -23,6 +23,7 @@ const seedDatabase = async () => {
         // example products
         const products = [
             {
+                code: 'NIKE-FB001',
                 name: 'Balón de fútbol Nike',
                 description: 'Balón oficial de la liga, tamaño 5',
                 price: 49.99,
@@ -30,6 +31,7 @@ const seedDatabase = async () => {
                 stock: 10,
             },
             {
+                code: 'ADIDAS-RUN001',
                 name: 'Camiseta Adidas Running',
                 description: 'Camiseta ligera para correr',
                 price: 29.99,
@@ -37,6 +39,7 @@ const seedDatabase = async () => {
                 stock: 20,
             },
             {
+                code: 'WILSON-TNS001',
                 name: 'Raqueta de tenis Wilson',
                 description: 'Raqueta profesional, marco de carbono',
                 price: 120.0,
