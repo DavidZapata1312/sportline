@@ -28,7 +28,6 @@ const seedDatabase = async () => {
                 price: 49.99,
                 category: 'Fútbol',
                 stock: 10,
-                brand: 'Nike',
             },
             {
                 name: 'Camiseta Adidas Running',
@@ -36,7 +35,6 @@ const seedDatabase = async () => {
                 price: 29.99,
                 category: 'Running',
                 stock: 20,
-                brand: 'Adidas',
             },
             {
                 name: 'Raqueta de tenis Wilson',
@@ -44,7 +42,6 @@ const seedDatabase = async () => {
                 price: 120.0,
                 category: 'Tenis',
                 stock: 5,
-                brand: 'Wilson',
             },
         ];
 
