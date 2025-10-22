@@ -3,6 +3,7 @@ import sequelize from "../config/db.js";
 
 interface ProductAttributes {
     id: number;
+    code: string;
     name: string;
     description?: string;
     price: number;
@@ -16,6 +17,7 @@ interface ProductCreationAttributes extends Optional<ProductAttributes, 'id' | '
 
 class Product extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
     public id!: number;
+    public code!: string;
     public name!: string;
     public description?: string;
     public price!: number;
@@ -29,6 +31,7 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes> implem
 Product.init(
     {
         id: { type: DataTypes.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
+        code: { type: DataTypes.STRING(50), allowNull: false, unique: true },
         name: { type: DataTypes.STRING(100), allowNull: false },
         description: { type: DataTypes.TEXT, allowNull: true },
         price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
