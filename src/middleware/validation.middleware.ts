@@ -91,6 +91,16 @@ export const commonParamRules = {
                 return !isNaN(id) && id > 0;
             }
         }
+    ],
+    clientId: [
+        {
+            field: 'clientId',
+            message: 'Invalid clientId format',
+            validator: (value: any) => {
+                const id = parseInt(value);
+                return !isNaN(id) && id > 0;
+            }
+        }
     ]
 };
 
@@ -143,5 +153,16 @@ export const validations = {
         { field: 'price', message: 'Price must be positive', validator: (v) => v === null || v === undefined || v > 0 },
         { field: 'category', message: 'Category must not exceed 50 characters', validator: (v) => !v || v.length <= 50 },
         { field: 'stock', message: 'Stock must be non-negative', validator: (v) => v === null || v === undefined || v >= 0 },
-    ], { skipOnEmpty: false })
+    ], { skipOnEmpty: false }),
+
+    // Delivery validations
+    validateCreateDelivery: validateRequest([
+        { field: 'clientId', message: 'clientId is required', validator: (v) => v !== null && v !== undefined && v !== '' },
+        { field: 'clientId', message: 'clientId must be a positive number', validator: (v) => !v || parseInt(v) > 0 },
+        { field: 'items', message: 'items is required', validator: (v) => Array.isArray(v) && v.length > 0 },
+        { field: 'items', message: 'each item must have productId and quantity', validator: (v) => Array.isArray(v) && v.every((i) => i.productId && i.quantity) },
+        { field: 'items', message: 'quantity must be positive', validator: (v) => Array.isArray(v) && v.every((i) => i.quantity > 0) },
+    ]),
+
+    validateClientId: validateParams(commonParamRules.clientId)
 };
